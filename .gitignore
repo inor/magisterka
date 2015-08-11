@@ -1,0 +1,12 @@
+*.[od]
+*~
+*.m*
+*.out
+*.dat
+*.l*
+*.cof
+*.e*
+*.gcc
+*.sym
+*.wat
+
