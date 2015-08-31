@@ -1,5 +1,5 @@
 #include <avr\interrupt.h>
-#define F_CPU 3686400
+#define F_CPU 9216000
 #define BAUD 115200
 #include <util/setbaud.h>
 

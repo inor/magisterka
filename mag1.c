@@ -112,7 +112,14 @@ int main(void) {
 
 	
 	UART_send_char(0x86);
-
+	//-----------TEST PŁYTY------------
+	sbi(PORTC,0);
+	sbi(PORTC,1);
+	klawisz();
+	tmp=twi_acc_test();
+	if (tmp==0x03) cbi(PORTC, 1); //zapalamy zielen
+	//else cbi(PORTC, 0);
+	//-----------KONIEC TESTU PŁYTY --------------------
 	twi_acc_config(RANGE_4G, BW_500HZ);
 	
 	UART_send_char(0x82);
