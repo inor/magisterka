@@ -30,8 +30,8 @@
 
 volatile unsigned char spi_rdy=0;
 volatile unsigned char spi_received_value=0;
-volatile unsigned char UART_rdy=0;
-volatile unsigned char UART_received_data=0;
+//volatile unsigned char UART_rdy=0;
+//volatile unsigned char UART_received_data=0;
 
 char check_user_button(void){
 	unsigned char i=255;
@@ -91,6 +91,7 @@ int main(void) {
 	//unsigned char _UART_ind=0;
 	unsigned char tmp;
 	unsigned char i2c_buf[6];
+	unsigned char i;
 	set_sleep_mode(SLEEP_MODE_IDLE);
 	DDRC = 0x07;//jako wyjscia dla diod led ale przedewszystkim SS dla acc i mag. PC5 - acc; PC4 - mag
 	PORTC = 0x04;//gasimy diody, SS w stanie wysokim
@@ -109,17 +110,26 @@ int main(void) {
 	if (tmp==0x03) cbi(PORTC, 1); //zapalamy zielen
 	twi_acc_config(RANGE_4G, BW_500HZ);
 	//-----------KONIEC TESTU I KONFIGURACJI CZUJNIKA--------------------
-	
+	UART_send_char(0x11);
 	m25_slave_free();
 	_delay_ms(20.0);
-	m25_slave_select();
-	tmp=m25_get_status();
-	m25_slave_free();
-	UART_send_char(tmp);
-	UART_send_char(0x77);
+//	m25_slave_select();
+//	tmp=m25_get_status();
+//	m25_slave_free();
+//	UART_send_char(tmp);
+
+
+	//m25_choose_address(addr);
+	//for(i=0;i<16;i++)
+	//-----------------------TEST PAMIECI FLASH--------------------------------
+	//TODO wywołać funkcje test i odczytac wartość bool
+
 	klawisz();//czekamy na start
 	sbi(PORTC,0);//gasimy diody
 	sbi(PORTC,1);
+
+	//m25_erase_chip();
+	UART_send_char(0x88);
 //------------------------------KONIEC INICJALIZACJI---------------------------------------
 //------------------------------CZEKAMY NA ZNAK PO UART------------------------------------
 	while(UART_received_data==0);
@@ -141,6 +151,7 @@ int main(void) {
 			m25_save_6bytes(i2c_buf);
 		UART_send_char(0x66);
 	}
+	//return 0;
 }
 /*
 	Notki:	Trzeba zadbać o kwarc 3,6864 -> choć do testow z uart, ale przyda sie wieksza czestotliwosc przy komunikacji. ograniczy tez
