@@ -78,20 +78,12 @@ unsigned char twi_get_data(unsigned char *buf){
 	else return 0;
 }
 
-//PRZERWANIE
 
-ISR(SPI_STC_vect)
-{
-	spi_rdy=1;
-	spi_received_value=SPDR;
-	
-}
 
 int main(void) {
 	//unsigned char _UART_ind=0;
 	unsigned char tmp;
 	unsigned char i2c_buf[6];
-	unsigned char i;
 	set_sleep_mode(SLEEP_MODE_IDLE);
 	DDRC = 0x07;//jako wyjscia dla diod led ale przedewszystkim SS dla acc i mag. PC5 - acc; PC4 - mag
 	PORTC = 0x04;//gasimy diody, SS w stanie wysokim

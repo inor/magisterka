@@ -1,6 +1,6 @@
 #include "spi.h"
 
-extern volatile unsigned char spi_rdy;
+volatile bool spi_rdy;
 
 void SPI_init_master()
 {
@@ -21,11 +21,20 @@ unsigned char SPI_recive_char()
 	return SPDR;                    //Zwracamy to co dostaliśmy do SPDR
 }                             
 
-inline void SPI_send_char(unsigned char z)
+inline void SPI_send_char(uint8_t z)
 {
-	spi_rdy=0;  
+	while (spi_rdy==false);
+	spi_rdy=false;
 	SPDR = z;
 	                  //Wysyłamy zawartość zmiennej bajt   
 	//while( ! bit_is_set( SPSR, SPIF ) );        //Oczekujemy na zakończenie transmisji ( do ustawienia SPIF ) przez sprzęt
 }                           
 
+//PRZERWANIE
+
+ISR(SPI_STC_vect)
+{
+	spi_rdy=true;
+	spi_received_value=SPDR;
+
+}
